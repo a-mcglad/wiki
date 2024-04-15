@@ -22,6 +22,22 @@ def entry(request, title):
             "title": title
         })
     
+def new(request):
+    if request.method == "POST":
+        title = request.POST.get("title", "")
+        if title in util.list_entries():
+            return render(request, "encyclopedia/error.html", {
+            "message": "Page already exists",
+            "title": title
+        })
+        content = request.POST.get("text", "")
+        f = open(f"entries/{title}.md", "x")
+        f.write(content)
+        f.close()
+        return redirect("index")
+    else:
+        return render(request, "encyclopedia/new.html")
+    
 def search(request):
     entries = util.list_entries()
     q = request.GET.get("q", "")
@@ -36,21 +52,3 @@ def search(request):
             "entries": list,
             "title": q
         })
-
-
-
-    # if q in util.list_entries():
-    #     return render(request, "encyclopedia/entry.html", {
-    #         "text": mk.convert(util.get_entry(q)),
-    #         "title": q
-    #     })
-    # else:
-    #     list = []
-    #     for i in util.list_entries():
-    #         if q in i:
-    #             list.append(i)
-    #     return render(request, "encyclopedia/search.html", {
-    #         "entres": list,
-    #         "text": mk.convert(util.get_entry(q)),
-    #         "title": q
-    #     })
