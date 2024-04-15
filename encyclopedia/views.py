@@ -10,6 +10,22 @@ def index(request):
         "entries": util.list_entries()
     })
 
+def edit(request, title):
+    if request.method == "GET":
+         print("title is ", title)
+         return render(request, "encyclopedia/edit.html", {
+            "text": util.get_entry(title),
+            "title": title
+        })
+    else:
+        title = request.POST.get("title", "")
+        text = request.POST.get("text", "")
+        f = open(f"entries/{title}.md", "w")
+        f.write(text)
+        f.close
+        return redirect("entry", title=title)
+
+
 def entry(request, title):
     if title in util.list_entries():
         return render(request, "encyclopedia/entry.html", {
@@ -21,6 +37,7 @@ def entry(request, title):
             "message": "Page does not exist",
             "title": title
         })
+
     
 def new(request):
     if request.method == "POST":
