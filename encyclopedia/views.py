@@ -19,7 +19,7 @@ def edit(request, title):
         })
     else:
         title = request.POST.get("title", "")
-        text = request.POST.get("text", "")
+        text = request.POST.get("text", "").replace("\r\n", "\n").replace("\r", "\n")
         f = open(f"entries/{title}.md", "w")
         f.write(text)
         f.close
