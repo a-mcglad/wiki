@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from markdown import Markdown
+from random import randrange
 
 from . import util
 
@@ -54,6 +55,11 @@ def new(request):
         return redirect("index")
     else:
         return render(request, "encyclopedia/new.html")
+
+def random_page(request):
+    entries = util.list_entries()
+    choice = entries[randrange(0, len(entries))]
+    return redirect(entry, title=choice)
     
 def search(request):
     entries = util.list_entries()
